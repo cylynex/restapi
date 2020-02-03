@@ -49,10 +49,16 @@ class People extends Database {
 	
 	// Delete Person - Accepts ID as variable
 	function Delete($toDelete) {
-		if ($this->Query("DELETE FROM people WHERE $toDelete ")) {
-			$this->CreateResponse(1,"Person Deleted Successfully.");
+		$delo = explode("=",$toDelete);
+		if (is_numeric($delo[1])) {
+			$deleteID = $delo[1];
+			if ($this->Query("DELETE FROM people WHERE id = '$deleteID' ")) {
+				$response = $this->CreateResponse(1,"Person Deleted Successfully.");
+			} else {
+				$this->CreateResponse(0,"Person Deleteion Failed");
+			}
 		} else {
-			$this->CreateResponse(0,"Person Deleteion Failed");
+			$response = $this->CreateResponse(0,"Invalid Input");
 		}
 		
 		header('Content-Type: application/json');
