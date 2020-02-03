@@ -1,5 +1,4 @@
 <?php 
-include("includes/header.php"); 
+include("includes/initialize.php"); 
 include("includes/handler.php");
-
 ?>

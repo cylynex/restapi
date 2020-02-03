@@ -1,5 +1,6 @@
 <?php
 //ob_start();
+session_start(); 
 
 // Config
 include("classes/dbvars.php");
