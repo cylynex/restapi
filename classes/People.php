@@ -1,7 +1,7 @@
 <?php
 class People extends Database {
 		
-	// Read Function - Accepts firstName, lastName as variables
+	// Read Function - Accepts firstName, lastName as variables.
 	function Read() {
 		
 		$where = "";
@@ -10,10 +10,15 @@ class People extends Database {
 		// Check for variables
 		if ($_GET) { 
 			$where = " WHERE ";
-			foreach ($_GET AS $key => $val) {
+						
+			if ($_GET['firstName']) {
+				$where .= "firstName = '".$_GET['firstName']."'";
 				$spot++;
-				if ($spot > 1) { $where .= " AND "; }
-				$where .= " $key = '$val' "; 
+			}
+			
+			if ($_GET['lastName']) {
+				if ($spot > 0) { $where .= " AND "; }
+				$where .= "lastName = '".$_GET['lastName']."'";
 			}
 		}
 		
@@ -23,7 +28,6 @@ class People extends Database {
 			$response[]=$row;
 		}
 		
-		// Output
 		header('Content-Type: application/json');
 		echo json_encode($response);
 	}
@@ -35,6 +39,7 @@ class People extends Database {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$firstName = $data['firstName'];
 		$lastName = $data['lastName'];
+		
 		if ($this->Query("INSERT INTO people (firstName, lastName) VALUES ('$firstName', '$lastName') ")) {
 			$response = $this->CreateResponse(1,"Person Successfully Added");
 		} else {
@@ -50,12 +55,13 @@ class People extends Database {
 	// Delete Person - Accepts ID as variable
 	function Delete($toDelete) {
 		$delo = explode("=",$toDelete);
+		
 		if (is_numeric($delo[1])) {
 			$deleteID = $delo[1];
 			if ($this->Query("DELETE FROM people WHERE id = '$deleteID' ")) {
 				$response = $this->CreateResponse(1,"Person Deleted Successfully.");
 			} else {
-				$this->CreateResponse(0,"Person Deleteion Failed");
+				$this->CreateResponse(0,"Person Deletion Failed");
 			}
 		} else {
 			$response = $this->CreateResponse(0,"Invalid Input");
